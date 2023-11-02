@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    container_name: db_nest_vsc
+    restart: always
+    ports:
+    - 1803:5432
+    environment:
+      - POSTGRES_USER:postgres
+      - POSTGRES_PASSWORD:123456
+      - POSTGRES_DB:nestjs
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  test-db:
+    image: postgres
+    restart: always
+    ports:
+    - 1802:5432
+    environment:
+      - POSTGRES_USER:postgres
+      - POSTGRES_PASSWORD:123456
+      - POSTGRES_DB:nestjs
+      - POSTGRES_HOST_AUTH_METHOD=trust
