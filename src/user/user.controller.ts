@@ -31,7 +31,6 @@ export class UserController {
   getUserProfile(
     @GetUser() user: User
   ) {
-    console.log(user);
     return this.userService.getUserProfile(user);
   }
 

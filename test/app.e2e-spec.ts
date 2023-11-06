@@ -4,7 +4,9 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum'
 import { AuthDTO } from '../src/auth/dto';
-import { EditUserDto } from 'src/user/dto';
+import { EditUserDto } from '../src/user/dto';
+import { BookmarkDto } from '../src/bookmark/dto/bookmark.dto';
+import { slashPath } from '../src/helpers/closurePath';
 const BASE_URL = 'http://localhost:3000';
 
 describe('App e2e', () => {
@@ -65,7 +67,7 @@ describe('App e2e', () => {
           .post('/auth/login')
           .withBody(payload)
           .expectStatus(200)
-          .stores('userStore', 'access_token')
+          .stores('token', 'access_token')
       })
     });
   })
@@ -74,7 +76,7 @@ describe('App e2e', () => {
       it('get User profile', () => {
         return pactum.spec()
           .get('/user/profile')
-          .withBearerToken(`$S{userStore}`)
+          .withBearerToken(`$S{token}`)
           .expectStatus(200)
       });
       const id = 1;
@@ -100,7 +102,7 @@ describe('App e2e', () => {
         return pactum.spec()
           .patch('/user/edit-profile')
           .withBody(payload)
-          .withBearerToken(`$S{userStore}`)
+          .withBearerToken(`$S{token}`)
           .expectStatus(200)
           .expectBodyContains(payload.firstName)
           .expectBodyContains(payload.lastName)
@@ -108,14 +110,42 @@ describe('App e2e', () => {
     });
   })
   describe('Bookmarks', () => {
+    const _slash = slashPath('bookmark')
     describe('CreateBookmark', () => {
-
+      it('Create book', () => {
+        const dto: BookmarkDto = {
+          title: 'this a new book',
+          link: 'https://links.com',
+          description: 'abcdefghijknml'
+        };
+        return pactum.spec()
+          .post(_slash('createBookmark'))
+          .withBody(dto)
+          .withBearerToken(`$S{token}`)
+      })
     });
-    describe('GetBookmark', () => {
-
+    describe('GetBookmarks', () => {
+      it('Get bookmarks', () => {
+        return pactum.spec()
+          .get(_slash('getBookmarks'))
+          .inspect()
+      })
     });
     describe('GetBookMarkById', () => {
-
+      it('Get bookmarks', () => {
+        return pactum.spec()
+          .get(_slash('getBookMarkById'))
+          .withQueryParams('id', 21)
+          .inspect()
+      })
+    });
+    describe('GetBookMarkBy UId', () => {
+      it('Get bookmarks BY UID', () => {
+        return pactum.spec()
+          .get(_slash('getBookmarkByUid'))
+          .withQueryParams('userId',38)
+          .inspect()
+      })
     });
     describe('EditBookmark', () => {
 

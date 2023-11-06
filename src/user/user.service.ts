@@ -49,7 +49,6 @@ export class UserService {
         code: 200,
       }
     }
-    console.log(user);
     delete user.hash;
     return user;
   }
