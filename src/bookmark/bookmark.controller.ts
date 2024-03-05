@@ -9,7 +9,10 @@ export class BookmarkController {
 
   @UseGuards(JwtGuard)
   @Post('createBookmark')
-  createBookmark(@GetUser('id', ParseIntPipe) uid: number, @Body() bookmarkDto: BookmarkDto) {
+  createBookmark(
+    @GetUser('id', ParseIntPipe) uid: number,
+    @Body() bookmarkDto: BookmarkDto
+  ) {
     return this.bookmarkService.createBookmark(uid, bookmarkDto);
   }
 
