@@ -5,18 +5,21 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { SocketModule } from './socket/socket.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule,
-    BookmarkModule,
-    SocketModule,
-    UserModule,
-    PrismaModule],
-  controllers: [],
-  providers: [],
+    // AuthModule,
+    // BookmarkModule,
+    // SocketModule,
+    // UserModule,
+    // PrismaModule
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }
