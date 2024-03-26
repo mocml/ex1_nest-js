@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { AuthDTO } from "./dto";
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -6,7 +6,8 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from '../prisma/prisma.service';
 import *  as jwk from "jsonwebtoken";
-
+import axios, { HttpStatusCode } from "axios";
+import { log } from "console";
 @Injectable({})
 export class AuthService {
   constructor(
@@ -105,4 +106,48 @@ KjOSsJwWqQVIEe8kElOHkwPK62lIZjMAEgOCtPhMhlpp0GCgrJPEIYGmrCustghS
       return error
     }
   };
+  async getTransactionId(id?: number) {
+    const url = `https://unica.vn/api/v2/get-receipt-apple`;
+    const payload = {
+      email: 'havanvan2601@gmail.com',
+      order_id: id,
+      limit: 5,
+    }
+    try {
+      const obj = await axios.post(
+        url, payload,
+      )
+      return obj.data?.data[0] ?? { data: null }
+    } catch (error) {
+
+    }
+  }
+  async checktrans(id?: number) {
+    const token = (await this.gentoken()).appleToken;
+    const appleUrl = `https://api.storekit.itunes.apple.com/inApps/v1/transactions/${id}`;
+    try {
+      const signedTransactionInfo = await axios.get(appleUrl, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const transactionsSigned = signedTransactionInfo?.data?.signedTransactionInfo
+      return this.detoken(transactionsSigned);
+    } catch (error) {
+      throw new HttpException(JSON.stringify(error), 500)
+    }
+  }
+  async traninfo(id?: number) {
+    try {
+      const orderDetail = await this.getTransactionId(id);
+      const transDetail = await this.checktrans(orderDetail?.Transaction_id);
+      return {
+        order_detail: orderDetail ?? {},
+        transInfo: transDetail ?? {},
+      }
+    } catch (error) {
+      return {
+        order_detail: null,
+        transInfo: null,
+      }
+    }
+  }
 }

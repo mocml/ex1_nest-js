@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Get, Param, Query } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Get, Param, Query, ParseIntPipe } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { AuthDTO } from "./dto";
 import router from "../constants/router";
@@ -28,5 +28,13 @@ export class AuthController {
   @Post('detoken')
   detoken(@Body() params: { token?: string }) {
     return this.authService.detoken(params?.token)
+  }
+  @Post('checktrans')
+  checktrans(@Body('id', new ParseIntPipe) id: number) {
+    return this.authService.checktrans(id);
+  }
+  @Get('traninfo')
+  traninfo(@Query('id', new ParseIntPipe) id: number){
+    return this.authService.traninfo(id);
   }
 }

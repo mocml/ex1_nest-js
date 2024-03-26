@@ -4,6 +4,7 @@ import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     BookmarkModule,
+    SocketModule,
     UserModule,
     PrismaModule],
   controllers: [],
