@@ -13,11 +13,11 @@ import { AppService } from './app.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // AuthModule,
-    // BookmarkModule,
-    // SocketModule,
-    // UserModule,
-    // PrismaModule
+    AuthModule,
+    BookmarkModule,
+    SocketModule,
+    UserModule,
+    PrismaModule
   ],
   controllers: [AppController],
   providers: [AppService],
