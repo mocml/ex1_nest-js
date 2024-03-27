@@ -139,6 +139,7 @@ KjOSsJwWqQVIEe8kElOHkwPK62lIZjMAEgOCtPhMhlpp0GCgrJPEIYGmrCustghS
     try {
       const orderDetail = await this.getTransactionId(id);
       const transDetail = await this.checktrans(orderDetail?.Transaction_id);
+      delete orderDetail.Transaction_receipt;
       return {
         order_detail: orderDetail ?? {},
         transInfo: transDetail ?? {},
