@@ -20,7 +20,7 @@ export class SocketGateway implements OnModuleInit {
       console.log('Connected');
       console.log(socket.rooms);
       socket.join('room-vanhv-1');
-      console.log(socket.rooms);
+      console.log(socket);
     })
   }
 
